@@ -80,3 +80,47 @@ for chunk in llm.stream(messages):
 
 - [DeepSeek API 文档](https://platform.deepseek.com/docs)
 - [LangChain 文档](https://python.langchain.com/)
+
+## 直接调用示例
+
+除了使用LangChain框架，项目中的`tip3.py`还展示了如何直接使用OpenAI客户端调用DeepSeek API：
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="your-api-key-here",
+    base_url="https://api.deepseek.com"
+)
+
+# 创建聊天完成请求
+completion = client.chat.completions.create(
+    model="deepseek-reasoner",
+    messages=[
+        {"role": "user", "content": "你的问题"}
+    ],
+    stream=True
+)
+
+print("\n" + "=" * 20 + "思考过程" + "=" * 20 + "\n")
+
+for chunk in completion:
+    if not chunk.choices:
+        print("\nUsage:")
+        print(chunk.usage)
+    else:
+        delta = chunk.choices[0].delta
+        # 打印思考过程
+        if hasattr(delta, 'reasoning_content') and delta.reasoning_content != None:
+            print(delta.reasoning_content, end='', flush=True)
+        else:
+            # 打印回复内容
+            print(delta.content, end='', flush=True)
+```
+
+这种方式的特点：
+
+- 直接使用OpenAI客户端，无需额外的框架
+- 支持查看模型的推理过程
+- 可以获取Token使用量信息
+- 支持流式输出回答
