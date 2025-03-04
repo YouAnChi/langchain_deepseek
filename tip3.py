@@ -1,7 +1,7 @@
 from openai import OpenAI
 
 client = OpenAI(
-    api_key = "sk-0ea9167338bc4daf945bf8a769ade25f",
+    api_key = "sk-0ea9167338bc4daf945bf8a769ade25f1",
     base_url="https://api.deepseek.com"
 )
 
